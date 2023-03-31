@@ -22,7 +22,7 @@ import datetime
 from google.colab import drive
 
 
-# In[2]:
+# In[ ]:
 
 
 #this part is not meant to be executed after conversion to a .py file
@@ -57,15 +57,18 @@ def tree(data, name='data', indent='|   '):
     prints to output instead of returning
     """
     name = [name]
-    level = 0
+    level = 0  #tracks progress through layers of nested objects
     _tree_check_type(data, name, level, indent)   
     
+
 def _tree_check_type(current_data, name, level, indent):
-    #used by tree function function to check the type of current_data
+    #used by tree function to check the type of current_data
 
     indents = level*indent
     current_data_name = ''.join(name)
     
+    #the following if-statements check for common data types and then go a
+    #level deeper when encountering a list, dict, array or dataframe
     if isinstance(current_data, list):
         if level == 0:
             print(f'{indents}list:')
@@ -103,7 +106,7 @@ def _tree_check_type(current_data, name, level, indent):
 
 
 def _tree_open_list(current_data, name, level, indent):
-    #used by tree function function to open dictionaries
+    #used by tree function to open and display contents of lists.
 
     counter = {}
     for ind in range(len(current_data)):
@@ -117,7 +120,7 @@ def _tree_open_list(current_data, name, level, indent):
 
 
 def _tree_open_dict(current_data, name, level, indent):
-    #used by tree function to open dictionaries
+    #used by tree function to open and display contents of dictionaries.
 
     for key in current_data.keys():
         if isinstance(key, str):
@@ -129,7 +132,7 @@ def _tree_open_dict(current_data, name, level, indent):
 
 
 def _tree_open_np_ndarray(current_data, name, level, indent):
-    #used by tree function to open numpy ndarrays
+    #used by tree function to open and display contents of numpy arrays.
 
     current_data_name = ''.join(name)
     
@@ -150,7 +153,7 @@ def _tree_open_np_ndarray(current_data, name, level, indent):
 
 
 def _tree_open_pd_dataframe(current_data, name, level, indent):
-    #used by tree function to open pandas dataframes
+    #used by tree function to open and display contents of pandas dataframes.
 
     for colname in list(current_data):
         current_data_name = ''.join(name)
@@ -161,4 +164,4 @@ def _tree_open_pd_dataframe(current_data, name, level, indent):
             print(f'{level*indent}{n_values} values in: {current_data_name}[{colname}]')
 
 
-# In[ ]:
+# In[5]:
