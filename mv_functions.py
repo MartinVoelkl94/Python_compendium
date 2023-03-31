@@ -8,7 +8,7 @@
 # 
 # The last cell of mv_functions.ipynb contains code that backs up the current mv_functions.py file and converts mv_functions.ipynb into a new mv_functions.py.
 
-# In[44]:
+# In[1]:
 
 
 import numpy as np
@@ -22,13 +22,39 @@ import datetime
 from google.colab import drive
 
 
-# In[45]:
+# In[2]:
 
 
-def tree(data, name='data', indent='|  '):
+#this part is not meant to be executed after conversion to a .py file
+if 'colab' in get_ipython().config['IPKernelApp']['kernel_class']:
+    # mounting to drive folder
+    from google.colab import drive
+    drive.mount('/content/drive')
+
+    #acces functions from mv_functions.py
+    sys.path.append('/content/drive/MyDrive/coding/Python/Compendium')
+    os.chdir('/content/drive/MyDrive/coding/Python/Compendium')
+    import mv_functions as mv
+
+
+# In[ ]:
+
+
+def tree(data, name='data', indent='|   '):
     """
-    gives a condensed overview of the content of an object
-    in a form resembling a folder tree.
+    gives a condensed overview of the content of an object in a form resembling
+    a folder tree. Made to be used in data exploration or when investigating a 
+    new algorithm. It has similar usecases as the basic type() function but in 
+    addition it also gives more information on certain common data types an is
+    able to show multiple layers of nested objects.
+
+    Parameters:
+    data: an object identifiable ny type()
+    name: optional. the name of the current object
+    indent: used to modify visual presentation of the output
+
+    Returns:
+    prints to output instead of returning
     """
     name = [name]
     level = 0
@@ -41,27 +67,39 @@ def _tree_check_type(current_data, name, level, indent):
     current_data_name = ''.join(name)
     
     if isinstance(current_data, list):
-        print(f'{indents}list: {current_data_name}')
+        if level == 0:
+            print(f'{indents}list:')
+        else:
+            print(f'{indents}list: {current_data_name}')
         level += 1
         _tree_open_list(current_data, name, level, indent)
-    
+
     elif isinstance(current_data, dict):
-        print(f'{indents}dictionary: {current_data_name}')
+        if level == 0:
+            print(f'{indents}dictionary:')
+        else:
+            print(f'{indents}dictionary: {current_data_name}')
         level += 1
         _tree_open_dict(current_data, name, level, indent)
 
     elif isinstance(current_data, np.ndarray):
-        print(f'{indents}np.ndarray: {current_data_name}')
+        if level == 0:
+            print(f'{indents}np.ndarray:')
+        else:
+            print(f'{indents}np.ndarray: {current_data_name}')
         level += 1
         _tree_open_np_ndarray(current_data, name, level, indent)
     
     elif isinstance(current_data, pd.core.frame.DataFrame):
-        print(f'{indents}dataframe: {current_data_name}')
+        if level == 0:
+            print(f'{indents}dataframe:')
+        else:
+            print(f'{indents}dataframe: {current_data_name}')
         level += 1
         _tree_open_pd_dataframe(current_data, name, level, indent)
     
     else:
-        print(f'{indents}{str(type(current_data))[8:-2]}: {current_data_name}')
+        print(f'{indents}{str(type(current_data))[8:-2]}')
 
 
 def _tree_open_list(current_data, name, level, indent):
@@ -123,4 +161,4 @@ def _tree_open_pd_dataframe(current_data, name, level, indent):
             print(f'{level*indent}{n_values} values in: {current_data_name}[{colname}]')
 
 
-# In[47]:
+# In[ ]:
