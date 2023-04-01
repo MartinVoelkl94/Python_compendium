@@ -8,7 +8,7 @@
 # 
 # The last cell of mv_functions.ipynb contains code that backs up the current mv_functions.py file and converts mv_functions.ipynb into a new mv_functions.py.
 
-# In[1]:
+# In[4]:
 
 
 import numpy as np
@@ -18,6 +18,7 @@ import time
 import shutil
 import os
 import sys
+import pickle
 import datetime
 from google.colab import drive
 
@@ -37,7 +38,7 @@ if 'colab' in get_ipython().config['IPKernelApp']['kernel_class']:
     import mv_functions as mv
 
 
-# In[ ]:
+# In[73]:
 
 
 def tree(data, name='data', indent='|   '):
@@ -164,4 +165,112 @@ def _tree_open_pd_dataframe(current_data, name, level, indent):
             print(f'{level*indent}{n_values} values in: {current_data_name}[{colname}]')
 
 
-# In[5]:
+# In[74]:
+
+
+def save(data, path=None, readme='no readme found',
+         supp={}, overwrite=False, verbose=True):
+    """
+    Makes working with various objects a little faster and more convenient.
+    Not meant for use in production ready code. Saves any type of python object
+    thats compatible with the pickle library as a file while offering some
+    additional convenience:
+        -one function for all data types
+        -therefore can be used when type of output is unknown beforehand
+        -option to include a readme string to explain the data
+        -option to include additional supplementary data
+        -if chosen or default (data0.pkl) filename already exists it increments
+            the number in the filename instead of overwriting the old file
+
+    Parameters:
+    data: any object compatible with the pickle library.
+    path: optional. filename or filepath to save the data as. if none is
+        provided, the data is saved in the current folder as data0.pkl.
+        if the chosen or default name is already taken, ascending numbers
+        (up to 1000) are added until the name is valid. its not necessary
+        (but possible) to add the '.pkl' extension when calling the function.
+    readme: optional. a string that can be saved with the data, for example
+        to explain where the data came from or how it was generated.
+        when loading the data   with the corresponding function mv.load the
+        string can be recalled.
+    supp: optional. a dictionary containing any additional object/s to be saved
+        together with the main data, for example the source of the data or the
+        code that produced it.
+    overwrite: whether or not existing files should be overwritten if they
+        have the same name as the one chosen for the data to save.
+    verbose: if confirmation and location of the saved file should be printed
+    """
+
+    if path == None: #neither directory nor filename provided
+        filename = 'data'
+        directory = os.getcwd()
+
+    elif '/' in path:  #directory provided
+        directory = '/'.join(path.split('/')[:-1])
+        if path.split('/')[-1] == '':  #directory provided but no filename
+            filename = 'data'
+        else:  #directory and filename provided
+            filename = path.split('/')[-1]
+
+    else:  #filename provided but no directory
+        directory = os.getcwd()
+        filename = path
+
+    #cut of extension (if one is given)
+    filename = filename.split('.')[0]
+
+    #put data, readme and supplements into dictionary
+    save_dict = {'data': data, 'readme': readme, 'supplementary': supp}
+
+    #set path to save data in ignoring existing files with that name
+    if overwrite == True:
+        save_path = f'{directory}/{filename}.pkl'
+    #increment filenumber as to not overwrite existing files instead
+    else:
+        existing_filenames = os.listdir(directory)
+        for i in range(1000):
+            save_name = f'{filename}{str(i)}.pkl'
+            if save_name not in existing_filenames:
+                save_path = f'{directory}/{save_name}'
+                break
+
+    #save data
+    with open(save_path, 'wb') as file:
+        pickle.dump(save_dict, file)
+        if verbose:
+            print('data saved in: ', save_path)
+
+
+
+def load(path='data0', readme=False, supp=False, verbose=False):
+    """
+    loads objects saved with mv.save.
+
+    Parameters:
+    path: optional. filename or filepath of the object to load. if non is given,
+        the default path of mv.save (data0.pkl) is used.
+    readme: wether to load the readme string saved with the object
+    supp: wether to load the dictionary of supplements saved with the object
+    verbose: switches 'commentary' on or off
+    """
+    
+    if '.pkl' not in path and '.pckl' not in path:
+        path = f'{path}.pkl'
+
+    with open(path, 'rb') as file:
+        save_dict = pickle.load(file)
+        
+    if readme:
+        print('readme:\n', save_dict['readme'])
+        
+    if supp:
+        if verbose:
+            print('supplementary information loaded from: ', path)
+        return(save_dict['supplementary'])
+    else:
+        if verbose:
+            print('data without supplementary information loaded from: ', path)
+        return(save_dict['data'])
+
+
+# In[ ]:
