@@ -8,22 +8,22 @@
 # 
 # The last cell of mv_functions.ipynb contains code that backs up the current mv_functions.py file and converts mv_functions.ipynb into a new mv_functions.py.
 
-# In[4]:
+# # imports
+
+# In[ ]:
 
 
 import numpy as np
 import pandas as pd
+import random
 import types
 import time
-import shutil
+import datetime
+
 import os
 import sys
+import shutil
 import pickle
-import datetime
-from google.colab import drive
-
-
-# In[ ]:
 
 
 #this part is not meant to be executed after conversion to a .py file
@@ -38,7 +38,9 @@ if 'colab' in get_ipython().config['IPKernelApp']['kernel_class']:
     import mv_functions as mv
 
 
-# In[73]:
+# # mv.tree
+
+# In[ ]:
 
 
 def tree(data, name='data', indent='|   '):
@@ -160,12 +162,14 @@ def _tree_open_pd_dataframe(current_data, name, level, indent):
         current_data_name = ''.join(name)
         n_values = len(current_data[colname])
         if isinstance(colname, str):
-            print(f'{level*indent}{n_values} values in:{current_data_name}["{colname}"]')
+            print(f'{level*indent}{n_values} values in: {current_data_name}["{colname}"]')
         else:
             print(f'{level*indent}{n_values} values in: {current_data_name}[{colname}]')
 
 
-# In[74]:
+# # mv.save
+
+# In[ ]:
 
 
 def save(data, path=None, readme='no readme found',
@@ -241,6 +245,10 @@ def save(data, path=None, readme='no readme found',
             print('data saved in: ', save_path)
 
 
+# # mv.load
+
+# In[ ]:
+
 
 def load(path='data0', readme=False, supp=False, verbose=False):
     """
@@ -273,4 +281,83 @@ def load(path='data0', readme=False, supp=False, verbose=False):
         return(save_dict['data'])
 
 
-# In[ ]:
+# # mv.samples
+
+# In[5]:
+
+
+def samples(dirname='samples'):
+    """
+    creates a folder with sample files in various formats for use in
+    Python_compendium.ipynb or testing functions.
+    """
+    if os.path.exists(dirname):
+        print(f'folder "{dirname}" found')
+    else:
+        os.mkdir(dirname)
+        print(f'created folder "{dirname}"')
+        
+
+
+    #list as .txt
+    list1 = [f'random number: {random.randint(0, 100)}' for x in range(20)]
+
+    with open(f'{dirname}/list.txt', 'w') as file:
+        for line in list1:
+            file.write(f'{line}\n')
+        print(f'created file "{dirname}/list.txt"')
+
+
+
+    #numpy arrays as .npy, .txt, .csv
+    numpy_array = np.array([[x*y for x in range(5)] for y in range(6)])
+
+    np.save(f'{dirname}/array.npy', numpy_array)
+    print(f'created file "{dirname}/array.npy"')
+    np.savetxt(f'{dirname}/array.txt', numpy_array, delimiter=',')
+    print(f'created file "{dirname}/array.txt"')
+    np.savetxt(f'{dirname}/array.csv', numpy_array, delimiter=',')
+    print(f'created file "{dirname}/array.csv"')
+
+
+
+    #pandas dataframes as .csv, .xlsx
+    df = pd.DataFrame([(1, 2.0, 'Hello', True), (2, 3.0, 'World', False)],
+                    index=['A', 'B'],
+                    columns=[1, 2, 3, 4])
+
+    df.to_csv(f'{dirname}/df.csv', index=True)
+    print(f'created file "{dirname}/df.csv"')
+    df.to_excel(f'{dirname}/df.xlsx', index=True)
+    print(f'created file "{dirname}/df.xlsx"')
+
+
+
+    #dictionary as .pkl
+    dict1 = {'name': 'Herbert', 'age': 22, 'height': 172}
+
+    with open(f'{dirname}/dict.pkl', 'wb') as file:
+            pickle.dump(dict1, file)
+            print(f'created file "{dirname}/dict.pkl"')
+
+
+
+    #nested object as .pkl
+    integer = 1
+    boolean = True
+    dict1 = {'name': 'Herbert', 'age': 22, 'height': 172, 1: 'id'}
+    list1 = [0, 1, 2, 'abc']
+    list2 = [[0,1,2], ['a', 'b'], [True, True, False], 0, 0.2, 'a', True, dict1]
+    array1 = [(1, 2.0, 'Hello'), (2, 3.0, 'World')]
+    array2 = np.array(array1)
+    dict2 = {'id': 'a5', 'contents': list2, 'date': 2021}
+    df1 = pd.DataFrame(array1, index=['X', 'Y'], columns=['A', 'B', 3])
+
+    nested = {'int': integer, 'boolean': boolean, 'dict1': dict1,
+            'dict2': dict2, 'list1': list1,'list2': list2,
+            'array': array1, 'array2': array2, 'dataframe': df1}
+
+    with open(f'{dirname}/nested.pkl', 'wb') as file:
+            pickle.dump(nested, file)
+            print(f'created file "{dirname}/nested.pkl"')
+
