@@ -10,7 +10,7 @@
 
 # # imports
 
-# In[ ]:
+# In[1]:
 
 
 import numpy as np
@@ -169,7 +169,7 @@ def _tree_open_pd_dataframe(current_data, name, level, indent):
 
 # # mv.save
 
-# In[ ]:
+# In[6]:
 
 
 def save(data, path=None, readme='no readme found',
@@ -223,12 +223,16 @@ def save(data, path=None, readme='no readme found',
     #cut of extension (if one is given)
     filename = filename.split('.')[0]
 
+    #combine directory and filename:
+    save_path = f'{directory}/{filename}.pkl'
+
     #put data, readme and supplements into dictionary
     save_dict = {'data': data, 'readme': readme, 'supplementary': supp}
 
-    #set path to save data in ignoring existing files with that name
-    if overwrite == True:
-        save_path = f'{directory}/{filename}.pkl'
+
+    #if filename doesnt exist or should be overwritten:
+    if not os.path.exists(save_path) or overwrite == True:
+        pass
     #increment filenumber as to not overwrite existing files instead
     else:
         existing_filenames = os.listdir(directory)
@@ -250,13 +254,13 @@ def save(data, path=None, readme='no readme found',
 # In[ ]:
 
 
-def load(path='data0', readme=False, supp=False, verbose=False):
+def load(path='data', readme=False, supp=False, verbose=False):
     """
     loads objects saved with mv.save.
 
     Parameters:
     path: optional. filename or filepath of the object to load. if non is given,
-        the default path of mv.save (data0.pkl) is used.
+        the default path of mv.save (data.pkl) is used.
     readme: wether to load the readme string saved with the object
     supp: wether to load the dictionary of supplements saved with the object
     verbose: switches 'commentary' on or off
@@ -283,7 +287,7 @@ def load(path='data0', readme=False, supp=False, verbose=False):
 
 # # mv.samples
 
-# In[5]:
+# In[ ]:
 
 
 def samples(dirname='samples'):
