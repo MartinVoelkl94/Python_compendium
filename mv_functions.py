@@ -169,7 +169,7 @@ def _tree_open_pd_dataframe(current_data, name, level, indent):
 
 # # mv.save
 
-# In[6]:
+# In[ ]:
 
 
 def save(data, path=None, readme='no readme found',
@@ -183,13 +183,13 @@ def save(data, path=None, readme='no readme found',
         -therefore can be used when type of output is unknown beforehand
         -option to include a readme string to explain the data
         -option to include additional supplementary data
-        -if chosen or default (data0.pkl) filename already exists it increments
+        -if chosen or default (data.pkl) filename already exists it increments
             the number in the filename instead of overwriting the old file
 
     Parameters:
     data: any object compatible with the pickle library.
     path: optional. filename or filepath to save the data as. if none is
-        provided, the data is saved in the current folder as data0.pkl.
+        provided, the data is saved in the current folder as data.pkl.
         if the chosen or default name is already taken, ascending numbers
         (up to 1000) are added until the name is valid. its not necessary
         (but possible) to add the '.pkl' extension when calling the function.
@@ -287,7 +287,7 @@ def load(path='data', readme=False, supp=False, verbose=False):
 
 # # mv.samples
 
-# In[ ]:
+# In[21]:
 
 
 def samples(dirname='samples'):
@@ -364,4 +364,67 @@ def samples(dirname='samples'):
     with open(f'{dirname}/nested.pkl', 'wb') as file:
             pickle.dump(nested, file)
             print(f'created file "{dirname}/nested.pkl"')
+
+
+# # mv.bin
+
+# In[59]:
+
+
+def bin(path=None, timespan=10, delete=False, bin_dir='bin', names=False,
+        extensions=['.py', '.txt', '.csv', '.xlsx', '.npy', '.pkl']):
+    """
+    looks in current working directory (default) or any given filepath for any
+    files modified within a specified timespan (default 10s) and puts then in
+    a trashbin folder. If delete is set to True it will delete the folder.
+    In default mode it only deletes files with the extensions .py, .txt, .csv,
+    .xlsx, .npy, .pkl.
+    """
+
+    now = time.time()
+    if path == None:
+        path = os.getcwd()
+    if not os.path.exists(f'{path}/{bin_dir}'):
+        os.mkdir(f'{path}/{bin_dir}')
+
+    all_files = os.listdir(path)
+    files = []
+    for file in all_files:
+        for extension in extensions:
+            if extension in file:
+                files.append(file)
+                break
+
+    moved = []
+    for file in files:
+        mod_time = os.path.getmtime(f'{path}/{file}')
+        if now - mod_time < timespan:
+            shutil.move(f'{path}/{file}', f'{path}/{bin_dir}/{file}')
+            moved.append(file)
+    print(f'{len(moved)} files moved to {path}/{bin_dir}')
+
+    if delete or len(os.listdir(f'{path}/{bin_dir}')) == 0:
+        shutil.rmtree(f'{path}/{bin_dir}')
+        print(f'deleted {path}/{bin_dir}')
+
+    if names:
+        return moved
+
+
+# In[ ]:
+
+
+
+
+
+# In[61]:
+
+
+samples()
+
+
+# In[63]:
+
+
+bin('samples')
 
