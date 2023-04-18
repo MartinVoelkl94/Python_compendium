@@ -8,7 +8,7 @@
 # 
 # The last cell of mv_functions.ipynb contains code that backs up the current mv_functions.py file and converts mv_functions.ipynb into a new mv_functions.py.
 
-# # imports
+# # Packages
 
 # In[1]:
 
@@ -287,7 +287,7 @@ def load(path='data', readme=False, supp=False, verbose=False):
 
 # # mv.samples
 
-# In[21]:
+# In[ ]:
 
 
 def samples(dirname='samples'):
@@ -368,7 +368,7 @@ def samples(dirname='samples'):
 
 # # mv.bin
 
-# In[59]:
+# In[ ]:
 
 
 def bin(path=None, timespan=10, delete=False, bin_dir='bin', names=False,
@@ -409,22 +409,4 @@ def bin(path=None, timespan=10, delete=False, bin_dir='bin', names=False,
 
     if names:
         return moved
-
-
-# In[ ]:
-
-
-
-
-
-# In[61]:
-
-
-samples()
-
-
-# In[63]:
-
-
-bin('samples')
 
