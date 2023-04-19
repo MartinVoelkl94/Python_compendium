@@ -8,9 +8,9 @@
 # 
 # The last cell of mv_functions.ipynb contains code that backs up the current mv_functions.py file and converts mv_functions.ipynb into a new mv_functions.py.
 
-# # Packages
+# # packages
 
-# In[1]:
+# In[4]:
 
 
 import numpy as np
@@ -409,4 +409,55 @@ def bin(path=None, timespan=10, delete=False, bin_dir='bin', names=False,
 
     if names:
         return moved
+
+
+# # mv.sift
+
+# In[2]:
+
+
+def sift(dict_or_list, filters, rename=False):
+    """
+    takes a list or dictionary and returns a filtered version were a filter
+    string, or list of filters is part of the entries/keys. When a dictionary
+    is filtered and rename=True, the keys of the filtered dictionary are
+    renamed to the filtered versions. this is generally not advised.
+    Since there is already a function named filter, this one is named sift.
+    """
+
+    if not isinstance(filters, list):
+        filters = [filters]
+
+    if isinstance(dict_or_list, list):
+        filtered = _filter_list(dict_or_list, filters)
+
+    if isinstance(dict_or_list, dict):
+        filtered = _filter_dict(dict_or_list, filters, rename)
+
+    return(filtered)
+
+
+def _filter_list(a_list, filters):
+    filtered = []
+    for filter in filters:
+        for item in a_list:
+            if not isinstance(item, str):
+                break
+            if filter in item and item not in filtered:
+                filtered.append(item)
+    return(filtered)
+    
+
+def _filter_dict(a_dict, filters, rename):
+    filtered = {}  
+    for filter in filters:
+        for key in a_dict.keys():
+            if not isinstance(key, str):
+                break
+            if filter in key and key not in filtered.keys():
+                if rename:
+                    filtered[filter] = a_dict[key]
+                else:
+                    filtered[key] = a_dict[key]
+    return(filtered)
 
