@@ -1,4 +1,4 @@
-This project is meant to be an aggregation of basic and intermediate python knowledge. I try to strike a balance between comprehensiveness and enough explanation so as to be usable by what i assume to be the average python user. Note that content is biased towards data exploration/analysis/science and not production ready code. 
+This project is meant to be an aggregation of basic and intermediate python knowledge. I try to strike a balance between comprehensiveness and enough explanation so as to be usable by what i assume to be the average newer python user. Note that content is biased towards data exploration/analysis/science and not production ready code. 
 
 
 Python_compendium.ipynb:  
