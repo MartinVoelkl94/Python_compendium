@@ -27,7 +27,7 @@
 
 # # packages
 
-# In[1]:
+# In[11]:
 
 
 import numpy as np
@@ -57,7 +57,7 @@ if 'colab' in get_ipython().config['IPKernelApp']['kernel_class']:
 
 # # mv.tree
 
-# In[2]:
+# In[ ]:
 
 
 def tree(data, name='data', indent='|   '):
@@ -186,7 +186,7 @@ def _tree_open_pd_dataframe(current_data, name, level, indent):
 
 # # mv.save
 
-# In[3]:
+# In[ ]:
 
 
 def save(data, path=None, readme='no readme found',
@@ -271,7 +271,7 @@ def save(data, path=None, readme='no readme found',
 
 # # mv.load
 
-# In[4]:
+# In[ ]:
 
 
 def load(path='data', readme=False, supp=False, verbose=False):
@@ -313,7 +313,7 @@ def load(path='data', readme=False, supp=False, verbose=False):
 
 # # mv.samples
 
-# In[5]:
+# In[ ]:
 
 
 def samples(dirname='samples'):
@@ -397,7 +397,7 @@ def samples(dirname='samples'):
 
 # # mv.clean
 
-# In[6]:
+# In[25]:
 
 
 def clean(path=None, timespan=10, delete=False, bin_dir='bin', names=False,
@@ -420,6 +420,9 @@ def clean(path=None, timespan=10, delete=False, bin_dir='bin', names=False,
     if not os.path.exists(f'{path}/{bin_dir}'):
         os.mkdir(f'{path}/{bin_dir}')
 
+    if isinstance(extensions, str):
+        extensions = [extensions]
+
     all_files = os.listdir(path)
     files = []
     for file in all_files:
@@ -427,7 +430,7 @@ def clean(path=None, timespan=10, delete=False, bin_dir='bin', names=False,
             if extension in file:
                 files.append(file)
                 break
-
+    print(files)
     moved = []
     for file in files:
         mod_time = os.path.getmtime(f'{path}/{file}')
@@ -446,7 +449,7 @@ def clean(path=None, timespan=10, delete=False, bin_dir='bin', names=False,
 
 # # mv.sift
 
-# In[7]:
+# In[ ]:
 
 
 def sift(dict_or_list, filters, rename=False):
