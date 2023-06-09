@@ -27,7 +27,7 @@
 
 # # packages
 
-# In[5]:
+# In[1]:
 
 
 import numpy as np
@@ -57,7 +57,7 @@ if 'colab' in get_ipython().config['IPKernelApp']['kernel_class']:
 
 # # mv.tree
 
-# In[ ]:
+# In[2]:
 
 
 def tree(data, name='data', indent='|   '):
@@ -74,7 +74,7 @@ def tree(data, name='data', indent='|   '):
     indent: used to modify visual presentation of the output
 
     Returns:
-    prints to output instead of returning
+    no return value. prints visualization of object structure to output instead
     """
     name = [name]
     level = 0  #tracks progress through layers of nested objects
@@ -186,7 +186,7 @@ def _tree_open_pd_dataframe(current_data, name, level, indent):
 
 # # mv.save
 
-# In[ ]:
+# In[3]:
 
 
 def save(data, path=None, readme='no readme found',
@@ -220,6 +220,9 @@ def save(data, path=None, readme='no readme found',
     overwrite: whether or not existing files should be overwritten if they
         have the same name as the one chosen for the data to save.
     verbose: if confirmation and location of the saved file should be printed
+
+    Returns:
+    no return value. prints location of saved data unless verbose=False
     """
 
     if path == None: #neither directory nor filename provided
@@ -268,7 +271,7 @@ def save(data, path=None, readme='no readme found',
 
 # # mv.load
 
-# In[ ]:
+# In[4]:
 
 
 def load(path='data', readme=False, supp=False, verbose=False):
@@ -281,6 +284,12 @@ def load(path='data', readme=False, supp=False, verbose=False):
     readme: wether to load the readme string saved with the object
     supp: wether to load any additional supplements saved with the object
     verbose: switches 'commentary' on or off
+
+    Returns:
+    returns one of 3 things related to the loaded data.
+        - the data itself
+        - a readme file (if one was saved with the data)
+        - supplementary data (if it was saved with the data)
     """
     
     if '.pkl' not in path and '.pckl' not in path:
@@ -304,13 +313,16 @@ def load(path='data', readme=False, supp=False, verbose=False):
 
 # # mv.samples
 
-# In[ ]:
+# In[5]:
 
 
 def samples(dirname='samples'):
     """
     creates a folder with sample files in various formats for use in
     Python_compendium.ipynb or for testing functions.
+
+    Returns:
+    no return value. prints type and location of created data.
     """
     if os.path.exists(dirname):
         print(f'folder "{dirname}" found')
@@ -385,7 +397,7 @@ def samples(dirname='samples'):
 
 # # mv.clean
 
-# In[ ]:
+# In[6]:
 
 
 def clean(path=None, timespan=10, delete=False, bin_dir='bin', names=False,
@@ -396,6 +408,10 @@ def clean(path=None, timespan=10, delete=False, bin_dir='bin', names=False,
     a trashbin folder. If delete is set to True it will delete the folder.
     In default mode it only deletes files with the extensions .py, .txt, .csv,
     .xlsx, .npy, .pkl.
+
+    Returns:
+    returns list with names of moved/deleted files if names=True.
+    prints location of trashbin folder, and if it was deleted.
     """
 
     now = time.time()
@@ -430,7 +446,7 @@ def clean(path=None, timespan=10, delete=False, bin_dir='bin', names=False,
 
 # # mv.sift
 
-# In[ ]:
+# In[7]:
 
 
 def sift(dict_or_list, filters, rename=False):
@@ -440,6 +456,9 @@ def sift(dict_or_list, filters, rename=False):
     is filtered and rename=True, the keys of the filtered dictionary are
     renamed to the filtered versions. this is generally not advised.
     Since there is already a function named filter, this one is named sift.
+
+    Returns:
+    returns a filtered version of the provided dictionary.
     """
 
     if not isinstance(filters, list):
